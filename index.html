@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#0c0601">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="La app para catar cervezas como un profesional">
+  <title>CerveCata 🍺</title>
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ══════════════════════════════════
+       PANTALLA 1 — BIENVENIDA
+       ══════════════════════════════════ -->
+  <section id="screen-welcome" class="screen active">
+    <div class="welcome-bg">
+      <div class="bubbles" id="bubbles"></div>
+    </div>
+
+    <div class="welcome-content">
+      <div class="logo-area">
+        <span class="logo-icon">🍺</span>
+        <h1 class="app-title">Cerve<span class="accent">Cata</span></h1>
+        <p class="app-subtitle">Puntúa y descubre tus cervezas favoritas</p>
+      </div>
+
+      <!-- Tarjeta retomar sesión (visible si hay cookie) -->
+      <div id="resume-card" class="card resume-card hidden">
+        <div class="resume-header">
+          <span class="resume-icon">👋</span>
+          <div>
+            <p class="resume-text">Hola de nuevo, <strong id="resume-name"></strong></p>
+            <p class="resume-detail" id="resume-detail">Tienes una cata en progreso</p>
+          </div>
+        </div>
+        <div class="resume-actions">
+          <button id="btn-resume" class="btn btn-primary">Retomar cata</button>
+          <button id="btn-discard" class="btn btn-ghost btn-sm">Nueva sesión</button>
+        </div>
+      </div>
+
+      <!-- Formulario de inicio -->
+      <div id="new-form" class="card form-card">
+        <label class="form-label" for="input-name">¿Cómo te llamas?</label>
+        <input
+          type="text"
+          id="input-name"
+          class="form-input"
+          placeholder="Tu nombre..."
+          maxlength="30"
+          autocomplete="off"
+          autocorrect="off"
+          spellcheck="false"
+        >
+        <button id="btn-start" class="btn btn-primary btn-full">
+          Empezar Cata <span class="btn-arrow">→</span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════
+       PANTALLA 2 — CATA
+       ══════════════════════════════════ -->
+  <section id="screen-tasting" class="screen">
+
+    <header class="tasting-header">
+      <span class="header-name" id="header-name">Catador</span>
+      <div class="progress-dots" id="progress-dots"></div>
+      <span class="header-progress" id="header-progress">1/1</span>
+    </header>
+
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+
+    <div class="beer-stage">
+      <div class="beer-card">
+
+        <!-- Imagen de la cerveza -->
+        <div class="beer-img-wrap" id="beer-img-wrap">
+          <img id="beer-img" class="beer-img" src="" alt="" aria-hidden="true">
+        </div>
+
+        <!-- Cabecera de la cerveza -->
+        <div class="beer-card-top">
+          <div class="beer-badge" id="beer-badge">#01</div>
+          <div class="beer-info">
+            <h2 class="beer-title" id="beer-title">Nombre de la Cerveza</h2>
+          </div>
+          <div class="beer-check" id="beer-check">✓</div>
+        </div>
+
+        <!-- Puntuación 1-10 -->
+        <div class="score-area">
+          <div class="score-label-row">
+            <span class="field-label">Puntuación</span>
+            <span class="score-current" id="score-current">—</span>
+          </div>
+          <div class="score-grid" id="score-grid">
+            <!-- Botones 1-10 generados por JS -->
+          </div>
+          <div class="score-vibe" id="score-vibe"></div>
+        </div>
+
+        <!-- Comentario -->
+        <div class="comment-area">
+          <label class="field-label" for="beer-comment">Notas de cata</label>
+          <textarea
+            id="beer-comment"
+            class="comment-input"
+            placeholder="Aroma, sabor, final en boca..."
+            rows="3"
+          ></textarea>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Navegación prev/next -->
+    <div class="tasting-footer">
+      <button id="btn-prev" class="btn btn-nav btn-ghost" disabled>
+        ← Anterior
+      </button>
+      <button id="btn-next" class="btn btn-nav btn-primary">
+        Siguiente →
+      </button>
+    </div>
+
+    <!-- Botón finalizar -->
+    <div class="finish-area">
+      <button id="btn-finish" class="btn btn-finish">
+        🏁 Finalizar — <span id="rated-count">0</span>/<span id="total-count">0</span> catadas
+      </button>
+    </div>
+
+  </section>
+
+
+  <!-- ══════════════════════════════════
+       PANTALLA 3 — RESULTADOS
+       ══════════════════════════════════ -->
+  <section id="screen-results" class="screen">
+
+    <div class="results-top">
+      <div class="results-hero">
+        <span class="trophy-icon">🏆</span>
+        <h2 class="results-title">Cata Completada</h2>
+        <p class="results-by" id="results-by">Por Samuel · 20 mar 2026</p>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-pill">
+          <span class="stat-num" id="stat-avg">—</span>
+          <span class="stat-lbl">Media</span>
+        </div>
+        <div class="stat-pill stat-pill--best">
+          <span class="stat-num" id="stat-best">—</span>
+          <span class="stat-lbl">🥇 Mejor</span>
+        </div>
+        <div class="stat-pill stat-pill--worst">
+          <span class="stat-num" id="stat-worst">—</span>
+          <span class="stat-lbl">📉 Peor</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Gráfica -->
+    <div class="chart-card card">
+      <h3 class="section-label">Puntuaciones</h3>
+      <div class="chart-wrapper" id="chart-wrapper">
+        <canvas id="results-chart"></canvas>
+      </div>
+    </div>
+
+    <!-- Lista detallada -->
+    <div class="results-list" id="results-list"></div>
+
+    <!-- Exportar -->
+    <div class="export-card card">
+      <h3 class="section-label">Guardar resultados</h3>
+      <div class="export-buttons">
+        <button id="btn-download" class="btn btn-export">
+          <span class="export-icon">⬇</span>
+          <span class="export-text">
+            <strong>Descargar JSON</strong>
+            <small>Para análisis posterior</small>
+          </span>
+        </button>
+        <button id="btn-whatsapp" class="btn btn-export btn-wa">
+          <span class="export-icon">📱</span>
+          <span class="export-text">
+            <strong>Compartir WhatsApp</strong>
+            <small>Enviar al grupo</small>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <button id="btn-new-tasting" class="btn btn-ghost btn-full btn-new">
+      ↩ Nueva Cata
+    </button>
+
+  </section>
+
+</div><!-- #app -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "session": "Cata de Cervezas 🍺",
+  "beers": [
+    { "id": 1, "name": "Kokonesia",                             "image": "images/1.webp" },
+    { "id": 2, "name": "Octavo Arte Oro Verde Green IPA",       "image": "images/2.webp" },
+    { "id": 3, "name": "Weihenstephaner Korbinian",             "image": "images/3.webp" },
+    { "id": 4, "name": "ECHIGO KOSHIHIKARI",                    "image": "images/4.webp" },
+    { "id": 5, "name": "Andechs Spezial Hell",                  "image": "images/5.webp" },
+    { "id": 6, "name": "FERMENTERARNA TRIPLIC DDH TRIPLE NEIPA","image": "images/6.webp" },
+    { "id": 7, "name": "WITHIN IPA SOMA",                       "image": "images/7.webp" }
+  ]
+}
