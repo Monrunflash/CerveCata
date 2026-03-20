@@ -185,6 +185,7 @@
     <!-- Exportar -->
     <div class="export-card card">
       <h3 class="section-label">Guardar resultados</h3>
+      <div id="s3-status" class="s3-status hidden"></div>
       <div class="export-buttons">
         <button id="btn-download" class="btn btn-export">
           <span class="export-icon">⬇</span>
@@ -207,11 +208,17 @@
       ↩ Nueva Cata
     </button>
 
+    <a href="analytics.html" class="btn btn-ghost btn-full btn-analytics">
+      📊 Ver analíticas de la cata
+    </a>
+
   </section>
 
 </div><!-- #app -->
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/aws-s3.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

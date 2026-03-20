@@ -1,0 +1,44 @@
+## ⚠️  Esta Action ya NO es necesaria con el flujo S3 + CloudFront.
+##
+## Con el nuevo sistema, el propio navegador actualiza results/index.json
+## en S3 automáticamente al finalizar cada cata (js/aws-s3.js).
+##
+## Se conserva este fichero como referencia por si en algún momento
+## se vuelve al flujo basado en repositorio Git.
+
+# name: Actualizar índice de resultados (DESHABILITADA)
+# on: { push: { paths: ['results/*.json'] } }
+
+
+on:
+  push:
+    paths:
+      - 'results/*.json'
+
+jobs:
+  update-index:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Regenerar results/index.json
+        run: |
+          cd results
+          # Recoge todos los .json excepto index.json, ordena por nombre
+          FILES=$(ls *.json 2>/dev/null | grep -v '^index\.json$' | sort | jq -R . | jq -s .)
+          SESSION=$(jq -r '.session // "Cata de Cervezas 🍺"' index.json 2>/dev/null || echo "Cata de Cervezas 🍺")
+          echo "{\"session\":\"$SESSION\",\"files\":$FILES}" | jq . > index.json
+          echo "index.json actualizado:"
+          cat index.json
+
+      - name: Commit y push si hay cambios
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add results/index.json
+          git diff --staged --quiet || git commit -m "chore: actualizar results/index.json [skip ci]"
+          git push

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#0c0601">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="description" content="Analytics de la cata de cervezas">
+  <title>CerveStats 📊</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/analytics.css">
+</head>
+<body>
+
+<!-- ── HEADER ──────────────────────────────────────── -->
+<header class="an-header">
+  <a href="index.html" class="an-back">← Catar</a>
+  <div class="an-logo">📊 Cerve<span class="accent">Stats</span></div>
+  <div class="an-spacer"></div>
+</header>
+
+<!-- ── LOADING ─────────────────────────────────────── -->
+<div id="an-loading" class="an-loading">
+  <span class="an-loading-icon">🍺</span>
+  <p>Cargando resultados...</p>
+</div>
+
+<!-- ── ERROR ───────────────────────────────────────── -->
+<div id="an-error" class="an-error hidden">
+  <span class="an-error-icon">❌</span>
+  <p>No se pudieron cargar los resultados</p>
+  <small>Comprueba que existe <code>results/index.json</code></small>
+</div>
+
+<!-- ── MAIN CONTENT ────────────────────────────────── -->
+<main id="an-main" class="an-main hidden">
+
+  <!-- Hero -->
+  <section class="an-hero">
+    <h1 class="an-hero-title" id="hero-session">Cata de Cervezas</h1>
+    <div class="an-meta-strip">
+      <div class="an-meta-item">
+        <span class="an-meta-num" id="meta-tasters">—</span>
+        <span class="an-meta-lbl">Catadores</span>
+      </div>
+      <span class="an-meta-sep">·</span>
+      <div class="an-meta-item">
+        <span class="an-meta-num" id="meta-beers">—</span>
+        <span class="an-meta-lbl">Cervezas</span>
+      </div>
+      <span class="an-meta-sep">·</span>
+      <div class="an-meta-item">
+        <span class="an-meta-num" id="meta-avg">—</span>
+        <span class="an-meta-lbl">Media global</span>
+      </div>
+    </div>
+    <p class="an-meta-date" id="meta-date"></p>
+  </section>
+
+  <!-- Podio -->
+  <section class="an-section">
+    <h2 class="an-section-title">🏆 Podio</h2>
+    <div id="podium" class="an-podium"></div>
+  </section>
+
+  <!-- Ranking completo -->
+  <section class="an-section">
+    <h2 class="an-section-title">📊 Ranking completo</h2>
+    <div class="an-card">
+      <div id="ranking-chart-wrap">
+        <canvas id="ranking-chart"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tabla de puntuaciones (heatmap) -->
+  <section class="an-section">
+    <h2 class="an-section-title">🗺️ Tabla de puntuaciones</h2>
+    <div class="an-card an-card--overflow">
+      <div id="heatmap"></div>
+    </div>
+  </section>
+
+  <!-- Por catador -->
+  <section class="an-section">
+    <h2 class="an-section-title">👤 Por catador</h2>
+    <div id="taster-cards" class="an-taster-grid"></div>
+  </section>
+
+  <!-- Comparativa radar (solo con ≥2 catadores) -->
+  <section class="an-section hidden" id="radar-section">
+    <h2 class="an-section-title">🕸️ Comparativa de gustos</h2>
+    <div class="an-card">
+      <div id="radar-chart-wrap">
+        <canvas id="radar-chart"></canvas>
+      </div>
+    </div>
+  </section>
+
+  <!-- Comentarios -->
+  <section class="an-section hidden" id="comments-section">
+    <h2 class="an-section-title">💬 Comentarios</h2>
+    <div id="comments-list" class="an-comments-grid"></div>
+  </section>
+
+  <!-- Instrucciones de uso -->
+  <section class="an-section">
+    <div class="an-card an-card--info">
+      <h3 class="an-info-title">➕ Añadir resultados</h3>
+      <p class="an-info-text">
+        Para incluir una nueva cata, sube el <code>.json</code> descargado desde la app
+        a la carpeta <code>results/</code> del repositorio y añade el nombre del fichero
+        al array de <code>results/index.json</code>.
+      </p>
+      <div class="an-info-example">
+        <pre>{
+  "session": "Cata de Cervezas 🍺",
+  "files": [
+    "cata_samuel_2026-03-20.json",
+    "cata_pepita_2026-03-20.json"  ← añade aquí
+  ]
+}</pre>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/analytics.js"></script>
+</body>
+</html>

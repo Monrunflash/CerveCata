@@ -853,10 +853,49 @@ body {
 .export-text small  { font-size: 12px; color: var(--muted); font-weight: 400; }
 
 .btn-new {
-  margin: 4px 20px 36px;
+  margin: 4px 20px 10px;
   width: calc(100% - 40px);
 }
 
+.btn-analytics {
+  margin: 0 20px 36px;
+  width: calc(100% - 40px);
+  font-size: 14px;
+  opacity: 0.7;
+}
+.btn-analytics:hover { opacity: 1; }
+
+/* Estado de subida a S3 */
+.s3-status {
+  padding: 10px 14px;
+  border-radius: var(--radius-xs);
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.4;
+}
+
+.s3-status--uploading {
+  background: var(--amber-soft);
+  border: 1px solid var(--amber-dark);
+  color: var(--amber);
+}
+
+.s3-status--success {
+  background: rgba(74, 222, 128, 0.08);
+  border: 1px solid var(--green);
+  color: var(--green);
+}
+
+.s3-status--error {
+  background: rgba(248, 113, 113, 0.08);
+  border: 1px solid var(--red);
+  color: var(--red);
+  word-break: break-word;
+}
 
 /* ══════════════════════════════════════════
    RESPONSIVE — Tablet/Desktop
@@ -896,5 +935,13 @@ body {
 
   .results-list { width: 100%; padding: 0; }
 
-  .btn-new { margin: 4px auto 40px; }
+  .btn-new,
+  .btn-analytics {
+    margin: 4px auto;
+    width: calc(100% - 40px);
+    max-width: 560px;
+    display: flex;
+  }
+
+  .btn-analytics { margin-bottom: 40px; }
 }

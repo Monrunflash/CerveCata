@@ -427,6 +427,9 @@ function mountResults() {
   $('btn-download').onclick     = downloadJSON;
   $('btn-whatsapp').onclick     = shareWhatsApp;
   $('btn-new-tasting').onclick  = newTasting;
+
+  // Auto-subida a S3 si está configurado
+  autoUploadToS3();
 }
 
 // ─── LISTA DE RESULTADOS ─────────────────────────────────
@@ -531,28 +534,29 @@ function buildChart() {
   });
 }
 
-// ─── DESCARGAR JSON ──────────────────────────────────────
-function downloadJSON() {
-  const scores    = state.beers.map(b => state.ratings[b.id]?.score).filter(s => s != null);
-  const avg       = average(scores);
+// ─── CONSTRUIR JSON DE RESULTADOS ──────────────────────
+function buildOutputFilename() {
+  return `cata_${state.tasterName.replace(/\s+/g, '_').toLowerCase()}_${state.sessionDate}.json`;
+}
 
+function buildOutputJSON() {
+  const scores     = state.beers.map(b => state.ratings[b.id]?.score).filter(s => s != null);
+  const avg        = average(scores);
   const ratingsArr = state.beers.map(b => {
     const r = state.ratings[b.id] || {};
     return { id: b.id, name: b.name, score: r.score ?? null, comment: r.comment || '' };
   });
-
   const bestBeer  = scores.length
     ? ratingsArr.filter(r => r.score != null).reduce((a, b) => b.score > a.score ? b : a)
     : null;
   const worstBeer = scores.length
     ? ratingsArr.filter(r => r.score != null).reduce((a, b) => b.score < a.score ? b : a)
     : null;
-
-  const output = {
-    session:  state.sessionName,
-    taster:   state.tasterName,
-    date:     state.sessionDate,
-    ratings:  ratingsArr,
+  return {
+    session: state.sessionName,
+    taster:  state.tasterName,
+    date:    state.sessionDate,
+    ratings: ratingsArr,
     summary: {
       average: avg,
       rated:   scores.length,
@@ -561,16 +565,40 @@ function downloadJSON() {
       worst:   worstBeer ? { id: worstBeer.id, name: worstBeer.name, score: worstBeer.score } : null
     }
   };
+}
 
-  const blob = new Blob([JSON.stringify(output, null, 2)], { type: 'application/json' });
+// ─── DESCARGAR JSON ──────────────────────────────────────
+function downloadJSON() {
+  const blob = new Blob([JSON.stringify(buildOutputJSON(), null, 2)], { type: 'application/json' });
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
   a.href     = url;
-  a.download = `cata_${state.tasterName.replace(/\s+/g, '_').toLowerCase()}_${state.sessionDate}.json`;
+  a.download = buildOutputFilename();
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+}
+
+// ─── SUBIDA AUTOMÁTICA A S3 ──────────────────────────────
+async function autoUploadToS3() {
+  if (typeof CERVE_CONFIG === 'undefined' || !CERVE_CONFIG?.s3?.enabled) return;
+
+  const statusEl = $('s3-status');
+  const show = (mod, msg) => {
+    statusEl.className = `s3-status s3-status--${mod}`;
+    statusEl.innerHTML = msg;
+    statusEl.classList.remove('hidden');
+  };
+
+  try {
+    show('uploading', '⏫ Subiendo resultados a S3…');
+    await S3.uploadResult(buildOutputFilename(), JSON.stringify(buildOutputJSON(), null, 2), CERVE_CONFIG);
+    show('success', '✓ Guardado en S3 correctamente');
+  } catch (e) {
+    console.error('S3 upload error:', e);
+    show('error', `✗ Error al subir a S3 — ${e.message}`);
+  }
 }
 
 // ─── COMPARTIR POR WHATSAPP ──────────────────────────────
